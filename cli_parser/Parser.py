@@ -24,24 +24,31 @@ class Parser:
 
                 return parsed
 
-            raise ValueError('Неправильный набор параметров')
+            raise ValueError('Неправильный набор параметров. Вызовите утилиту с флагом -h или --help')
 
         if '-u' not in argv:
             raise ValueError('Вы не ввели url адрес профиля пользователя')
 
         url_index = self.index(argv, '-u')
 
-        if argv[url_index + 1] is None:
+        if (url_index == len(argv) - 1) or (argv[url_index + 1] is None):
             raise ValueError('Вы не ввели значение для url')
 
         parsed['url'] = argv[url_index + 1]
 
+        is_count = False
+
         if '-c' in argv:
+            is_count = True
+
             count_index = self.index(argv, '-c')
 
-            if argv[count_index + 1] is None:
+            if (count_index == len(argv) - 1) or (argv[count_index + 1] is None):
                 raise ValueError('Вы не ввели значение для количество выводимых записей в подборке')
 
             parsed['count'] = int(argv[count_index + 1])
+
+        if (is_count and len(argv) != 4) or ((not is_count) and len(argv) != 2):
+            raise ValueError('Вы ввели не корректное количество параметров')
 
         return parsed
